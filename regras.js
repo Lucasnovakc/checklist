@@ -130,6 +130,31 @@
     return FREQUENCIAS[t.frequencia] || '';
   }
 
+  // ---- impressão ----
+  // Semanas (segunda a domingo) que tocam o mês, cortadas no primeiro e no último dia do mês.
+  function semanasDoMes(ano, mes) {
+    const dias = diasDoMes(ano, mes);
+    const semanas = [];
+    for (const d of dias) {
+      const { inicio } = periodo('semanal', d);
+      const ultima = semanas[semanas.length - 1];
+      if (!ultima || ultima.chave !== inicio) semanas.push({ chave: inicio, inicio: d, fim: d });
+      else ultima.fim = d;
+    }
+    return semanas.map(({ inicio, fim }) => ({ inicio, fim }));
+  }
+  // Quadradinho da grade do mês: 'marcar', 'nao' (dia fixo que não é desse dia) ou 'fechado' (restaurante fechado).
+  function celulaGrade(tarefa, dia, diasAbertos) {
+    if (!abre(dia, diasAbertos)) return 'fechado';
+    return devidaNoDia(tarefa, dia, diasAbertos) ? 'marcar' : 'nao';
+  }
+  // Tarefas ativas de um setor ou de uma pessoa, na ordem da tela, com a lista de quem faz cada uma.
+  function tarefasParaImprimir(tarefas, tarefaPessoas, { setor, pessoa }) {
+    const quem = id => tarefaPessoas.filter(tp => tp.tarefa_id === id).map(tp => tp.pessoa_id);
+    const lista = tarefas.filter(t => t.ativo && (!setor || t.setor_id === setor)).map(t => ({ ...t, quem: quem(t.id) }));
+    return ordenar(pessoa ? lista.filter(t => t.quem.includes(pessoa)) : lista);
+  }
+
   function formatarDiaLongo(dia) {
     const d = paraData(dia);
     return `${SEMANA[d.getDay()]}, ${d.getDate()} de ${MESES[d.getMonth()]}`;
@@ -165,6 +190,7 @@
     diaOperacional, somarDias, diaDaSemana, periodo, diasDoMes, mesDoDia, somarMeses,
     devidaNoDia, ultimoDiaAberto, trava, faltamParaFechar,
     ehDoDia, hhmm, ordenar, atrasado, progresso, situacaoSetor, estadoNoDia, resumoMes, prazo, descreverFrequencia,
+    semanasDoMes, celulaGrade, tarefasParaImprimir,
     formatarDiaLongo, nomeDoMes, formatarHora, primeiroNome,
     normalizarUsuario, emailDe, validarPessoa, validarTarefa,
   };

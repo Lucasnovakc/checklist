@@ -66,11 +66,11 @@
 
   async function desenhar(tela) {
     cad = await Nuvem.carregarCadastro();
-    const abas = [['tarefas', 'Setores e tarefas'], ['equipe', 'Equipe'], ['funcionamento', 'Funcionamento']];
+    const abas = [['tarefas', 'Setores e tarefas'], ['equipe', 'Equipe'], ['funcionamento', 'Funcionamento'], ['imprimir', 'Imprimir']];
     tela.innerHTML = `<section class="tela-cadastro">
       <header class="cabeca-dia"><h1>Cadastro</h1></header>
       <div class="filtros" role="tablist">${abas.map(([k, n]) => `<button type="button" class="chip${aba === k ? ' ativo' : ''}" data-aba="${k}" role="tab" aria-selected="${aba === k}">${n}</button>`).join('')}</div>
-      ${aba === 'tarefas' ? abaTarefas() : aba === 'equipe' ? abaEquipe() : abaFuncionamento()}
+      ${aba === 'tarefas' ? abaTarefas() : aba === 'equipe' ? abaEquipe() : aba === 'imprimir' ? Imprimir.aba() : abaFuncionamento()}
     </section>`;
   }
 
@@ -261,5 +261,6 @@
     if (ev.target.id === 'form-pessoa') salvarPessoa(ev.target).catch(App.erro);
   });
 
+  window.Cadastro = { dados: () => cad }; // a impressão usa as tarefas e os direcionamentos já carregados
   App.registrarTela('cadastro', desenhar);
 })();

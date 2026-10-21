@@ -1,8 +1,8 @@
 // Guarda os arquivos do app para abrir mesmo sem internet. Rede primeiro (pega a versão nova); cache se cair.
 // Ao publicar mudança grande, subir o número da versão.
-const CACHE = 'checklist-v1';
+const CACHE = 'checklist-v2';
 const ARQUIVOS = ['./', 'index.html', 'style.css', 'config.js', 'regras.js', 'fila.js', 'nuvem.js', 'app.js', 'login.js', 'hoje.js',
-  'acompanhar.js', 'historico.js', 'cadastro.js', 'vendor/supabase.js', 'logo.png', 'icone-192.png', 'icone-512.png', 'manifest.webmanifest'];
+  'acompanhar.js', 'historico.js', 'cadastro.js', 'imprimir.js', 'vendor/supabase.js', 'logo.png', 'icone-192.png', 'icone-512.png', 'manifest.webmanifest'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ARQUIVOS)));
